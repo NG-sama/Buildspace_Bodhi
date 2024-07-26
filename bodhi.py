@@ -10,46 +10,18 @@ import urllib.parse
 import streamlit.components.v1 as components
 
 
-def init_session():
-    # Session State initializations
+def init_session():    # Session State initializations
     if 'key' not in st.session_state:
         st.session_state.key = 0
-
-def share_buttons(content):
-    # LinkedIn & X (Twitter) share button
-    linkedin_url = f"https://www.linkedin.com/sharing/share-offsite/?url={urllib.parse.quote('https://www.linkedin.com/')}&title={urllib.parse.quote('Hi👋🏾')}&summary={urllib.parse.quote(content)}"
-    twitter_url = f"https://twitter.com/intent/tweet?text={urllib.parse.quote(content)}"
-    
-    st.write(f"[![Share on LinkedIn](https://img.shields.io/badge/Share%20on-LinkedIn-blue?style=plastic)]({linkedin_url}) "+f" [![Share on X](https://img.shields.io/badge/Share%20on-X-black?style=plastic)]({twitter_url}) ")
-
 
 def main():
     #Main Header  contents
     st.set_page_config(page_title="Bodhi", page_icon="🌳")
     init_session() #Initialize session
+    sidebar_content() #Sidebar content
+        
 
-    # Add tabs to the sidebar
-    st.sidebar.title('Welcome 👋🏾')
-    st.sidebar.header('Buildspace - Project Bodhi')
-    st.sidebar.write('[![Twitter](https://img.shields.io/badge/Follow-black?style=plastic&logo=X)](https://x.com/_the_real_ng_/) [![Instagram](https://img.shields.io/badge/Connect-pink?logo=instagram&style=plastic)](https://www.instagram.com/nikki_builds/) [![Linkedin](https://img.shields.io/badge/Connect-blue?style=plastic&logo=Linkedin)](https://www.linkedin.com/in/nikhil-gnanavel/)')
-    st.sidebar.write(' ')
-    st.sidebar.image("assets/face logo.jpg")
-    st.sidebar.header("About:")
-    st.sidebar.code('''Heyo 😁,
-Nikhil here. 
-Thanks for taking time to check this out.
-If you like this project and want to see some more cool GenAI projects, 
-hit me up through the feedback page below 👇🏾''')
-
-    tabs = ["Bodhi : Content-to-template generator", "Feedback"]
-    tab = st.sidebar.selectbox('', options=tabs,label_visibility="collapsed")  
-
-    if tab == 'Bodhi : Content-to-template generator':
-        app_page()
-    elif tab == 'Feedback':
-        feedback()    
-
-def app_page():
+def app_page(): #Main app page content
     st.header('Buildspace - Project Bodhi')
     st.write('Drop your content and template in this window to generate an automatic post! 🤖📟')
     tab1, tab2 = st.tabs(["Content", "Template"])
@@ -65,6 +37,9 @@ def app_page():
     models = ["gpt-4","mistral-large-latest"]
     option = st.selectbox("Select your model:",models)
 
+    donate_url = 'https://donate.stripe.com/8wM4gS7lx6mS5Ne5kk' #Donate link URL
+    st.link_button("Donate", donate_url) #Donate button
+    
     if st.button("Generate Content"):
         
         with st.spinner(f"Generating content from {option}..."):
@@ -85,8 +60,43 @@ def app_page():
         
         st.subheader("Share your generated content:")
         share_buttons(output_content)
-            
+
+def share_buttons(content): # Function to copy generated content to Social Media sites 
+    # LinkedIn & X (Twitter) share button
+    linkedin_url = f"https://www.linkedin.com/sharing/share-offsite/?url={urllib.parse.quote('https://www.linkedin.com/')}&title={urllib.parse.quote('Hi👋🏾')}&summary={urllib.parse.quote(content)}"
+    twitter_url = f"https://twitter.com/intent/tweet?text={urllib.parse.quote(content)}"
     
+    st.write(f"[![Share on LinkedIn](https://img.shields.io/badge/Share%20on-LinkedIn-blue?style=plastic)]({linkedin_url}) "+f" [![Share on X](https://img.shields.io/badge/Share%20on-X-black?style=plastic)]({twitter_url}) ")
+
+    
+
+def sidebar_content():
+
+# Add tabs to the sidebar
+    st.sidebar.title('Welcome 👋🏾')
+    st.sidebar.header('Buildspace - Project Bodhi')
+    st.sidebar.write('[![Twitter](https://img.shields.io/badge/Follow-black?style=plastic&logo=X)](https://x.com/_the_real_ng_/) [![Instagram](https://img.shields.io/badge/Connect-pink?logo=instagram&style=plastic)](https://www.instagram.com/nikki_builds/) [![Linkedin](https://img.shields.io/badge/Connect-blue?style=plastic&logo=Linkedin)](https://www.linkedin.com/in/nikhil-gnanavel/)')
+    tabs = ["Bodhi : Content-to-template generator", "Feedback"]
+    tab = st.sidebar.selectbox('', options=tabs,label_visibility="collapsed") 
+    
+    if tab == 'Bodhi : Content-to-template generator':
+        app_page()
+    elif tab == 'Feedback':
+        feedback()
+
+
+    st.sidebar.image("assets/face logo.jpg")
+    st.sidebar.header("About:")
+    st.sidebar.code('''Heyo 😁,
+Nikhil here. 
+Thanks for taking time to check this out.
+If you like this project and want to see some more cool GenAI projects, 
+hit me up through the feedback page.
+All contributions here will be added to future project and keeping this page active 💓''')
+    donate_url = 'https://donate.stripe.com/8wM4gS7lx6mS5Ne5kk' #Donate link URL
+    st.sidebar.link_button("Donate", donate_url) #Donate button    
+
+
 def feedback():
     # Replace 'YOUR_TALLY_FORM_URL' with the actual URL of your Tally form
     tally_form_url = """
@@ -94,6 +104,8 @@ def feedback():
     """
     # Embed the Tally form using an iframe
     components.html(tally_form_url,height=2200,width = 800, scrolling = True)
+
+## GPT model functions 
 
 def model_gpt(user_content,user_template):
     # Set up the language model
@@ -136,6 +148,7 @@ def model_Mistral(user_content,user_template):
     response = chat_model(messages)
 
     return response.content
+
 
 if __name__ == "__main__":
     # Access secrets from the secrets.toml file
