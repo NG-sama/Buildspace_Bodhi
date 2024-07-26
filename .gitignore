@@ -1,0 +1,6 @@
+# Files #
+secrets.toml
+startup.ps1
+
+# Folders #
+env/
