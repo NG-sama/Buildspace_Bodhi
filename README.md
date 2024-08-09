@@ -18,8 +18,8 @@ Project Bodhi is a Streamlit-based web application that generates content based 
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/project-bodhi.git
-   cd project-bodhi
+   git clone https://github.com/yourusername/project_bodhi.git
+   cd project_bodhi
    ```
 
 2. Install the required packages:
